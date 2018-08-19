@@ -5,14 +5,11 @@ if [[ $TRAVIS_TAG && ($TRAVIS_OTP_RELEASE != $MAIN_OTP || $REBAR_VSN -ne 3) ]]; 
     exit 0
 fi
 
-if [ $ELIXIR_VSN ]; then
-    ./scripts/kiex list known
-    ./scripts/kiex install $ELIXIR_VSN
-    exit 0
-fi
-
 mkdir vendor
-if [ $REBAR_VSN -eq 2 ]; then
+if [ $REBAR_VSN == 'mix' ]; then
+    echo using Mix
+    exit 0
+elif [ $REBAR_VSN -eq 2 ]; then
     if [ x$(which rebar)x != xx ]; then
         ln -s $(which rebar) vendor/rebar
     else
