@@ -16,7 +16,7 @@ case erlang:function_exported(rebar3, main, 1) of
         %% whenever adding a new Hex package dependency, this fun should be
         %% updated
         HexToRepo = fun(worker_pool) -> "https://github.com/inaka/worker_pool.git";
-                       (lager) -> "https://github.com/basho/lager.git";
+                       (lager) -> "https://github.com/erlang-lager/lager.git";
                        (meck) -> "https://github.com/eproxus/meck.git";
                        (stillir) -> "https://github.com/heroku/stillir.git"
                     end,
