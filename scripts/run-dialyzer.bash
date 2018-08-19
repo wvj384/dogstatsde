@@ -2,7 +2,7 @@
 
 if [[ $TRAVIS_OTP_RELEASE != $MAIN_OTP ]]; then
     echo "No dialyzer run for non-primary build"
-elif [[ $ELIXIR_VSN ]]; then
+elif [[ $REBAR_VSN == 'mix' ]]; then
     echo "No dialyzer run for Elixir build"
 elif [[ $REBAR_VSN -eq 2 ]]; then
     echo "No dialyzer run under rebar2"
