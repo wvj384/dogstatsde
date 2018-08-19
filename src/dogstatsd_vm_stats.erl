@@ -46,7 +46,7 @@
 
 -record(state, {key :: string(),
                 sched_time :: enabled | disabled | unavailable,
-                prev_sched :: [{integer(), integer(), integer()}],
+                prev_sched :: [{integer(), integer(), integer()}] | undefined,
                 timer_ref :: reference(),
                 delay :: integer(), % milliseconds
                 prev_io :: {In::integer(), Out::integer()},
@@ -80,6 +80,7 @@ init(BaseKey) ->
                         timer_ref = Ref,
                         delay = Delay,
                         sched_time = disabled,
+                        prev_sched = undefined,
                         prev_io = {In,Out},
                         prev_gc = PrevGC}};
         {false, _} ->
@@ -87,6 +88,7 @@ init(BaseKey) ->
                         timer_ref = Ref,
                         delay = Delay,
                         sched_time = unavailable,
+                        prev_sched = undefined,
                         prev_io = {In,Out},
                         prev_gc = PrevGC}}
     end.
@@ -154,12 +156,17 @@ handle_info({timeout, R, ?TIMER_MSG}, S = #state{key=K, delay=D, timer_ref=R}) -
     case Sched of
         enabled ->
             NewSched = lists:sort(erlang:statistics(scheduler_wall_time)),
-            [begin
-                SSid = integer_to_list(Sid),
-                dogstatsd:timing([K,"scheduler_wall_time.active"], Active, 1.00, #{scheduler => SSid}),
-                dogstatsd:timing([K,"scheduler_wall_time.total"], Total, 1.00, #{scheduler => SSid})
-             end
-             || {Sid, Active, Total} <- wall_time_diff(PrevSched, NewSched)],
+            case PrevSched of
+                undefined ->
+                    ok;  % we have no prior comparison right now
+                _ ->
+                    [begin
+                         SSid = integer_to_list(Sid),
+                         dogstatsd:timing([K,"scheduler_wall_time.active"], Active, 1.00, #{scheduler => SSid}),
+                         dogstatsd:timing([K,"scheduler_wall_time.total"], Total, 1.00, #{scheduler => SSid})
+                     end
+                     || {Sid, Active, Total} <- wall_time_diff(PrevSched, NewSched)]
+            end,
             {noreply, S#state{timer_ref=erlang:start_timer(D, self(), ?TIMER_MSG),
                               prev_sched=NewSched, prev_io={In,Out}, prev_gc=GC}};
         _ -> % disabled or unavailable
