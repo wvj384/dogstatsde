@@ -20,3 +20,4 @@ logs
 /_build
 /deps
 /mix.lock
+/rebar.lock
