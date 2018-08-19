@@ -12,9 +12,9 @@
   {env,[]},
   {mod, {dogstatsd_app, []}},
 
-  {maintainers, ["Nathaniel Waisbrot <waisbrot@whoop.com>"]},
+  {maintainers, ["Nathaniel Waisbrot <code@waisbrot.net>"]},
   {licenses, ["LAGPL"]},
-  {links, [{"GitHub", "https://github.com/WhoopInc/dogstatsde"}]},
+  {links, [{"GitHub", "https://github.com/waisbrot/dogstatsde"}]},
   {pkg_name, "dogstatsde"},
   {include_files, ["mix.exs"]},
   {build_tools, [<<"rebar3">>]}

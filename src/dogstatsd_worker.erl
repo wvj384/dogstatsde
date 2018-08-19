@@ -1,4 +1,4 @@
-%%% @author Nathaniel Waisbrot <waisbrot@whoop.com>
+%%% @author Nathaniel Waisbrot <code@waisbrot.net>
 -module(dogstatsd_worker).
 
 -behaviour(gen_server).
