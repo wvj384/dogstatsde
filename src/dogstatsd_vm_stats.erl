@@ -124,8 +124,13 @@ handle_info({timeout, R, ?TIMER_MSG}, S = #state{key=K, delay=D, timer_ref=R}) -
     dogstatsd:gauge([K,"run_queue"], erlang:statistics(run_queue), 1.00),
 
     %% Error logger backlog (lower is better)
-    {_, MQL} = process_info(whereis(error_logger), message_queue_len),
-    dogstatsd:gauge([K,"error_logger_queue_len"], MQL, 1.00),
+    %% For Elixir 1.7/OTP 21+ error_logger is not started by default
+    case whereis(error_logger) of
+      undefined -> ok;
+      pid ->
+        {_, MQL} = process_info(pid, message_queue_len),
+        dogstatsd:gauge([K,"error_logger_queue_len"], MQL, 1.00)
+    end,
 
     %% Memory usage. There are more options available, but not all were kept.
     %% Memory usage is in bytes.

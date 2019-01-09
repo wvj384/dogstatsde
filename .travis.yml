@@ -10,6 +10,11 @@ matrix:
       elixir: 1.6.6
       env:
         - REBAR_VSN=mix
+    - language: elixir
+      otp_release: 21.0
+      elixir: 1.7.1
+      env:
+        - REBAR_VSN=mix
     - language: erlang
       otp_release: 21.0
       env:
