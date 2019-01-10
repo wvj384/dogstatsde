@@ -127,8 +127,8 @@ handle_info({timeout, R, ?TIMER_MSG}, S = #state{key=K, delay=D, timer_ref=R}) -
     %% For Elixir 1.7/OTP 21+ error_logger is not started by default
     case whereis(error_logger) of
       undefined -> ok;
-      pid ->
-        {_, MQL} = process_info(pid, message_queue_len),
+      Pid ->
+        {_, MQL} = process_info(Pid, message_queue_len),
         dogstatsd:gauge([K,"error_logger_queue_len"], MQL, 1.00)
     end,
 
