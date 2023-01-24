@@ -111,7 +111,7 @@ build_tag_line(Tags, #state{tags=GlobalTags}) ->
 send_lines(Lines, #state{socket = Socket, host = Host, port = Port}) ->
     ok = lists:foreach(
         fun(Line) ->
-            io:format("Sending metric via statsd client: ~p", [Line]),
+            io:format("Sending metric via statsd client: ~s", [erlang:iolist_to_binary(Line)]),
             ok = gen_udp:send(Socket, Host, Port, Line)
         end,
         Lines
